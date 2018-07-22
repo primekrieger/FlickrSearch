@@ -7,7 +7,7 @@ class NetworkManager {
     func searchImages(for searchTerm: String, page: Int, completion: @escaping (FlickrPhotosSearchResponseModel?) -> Void) {
         executingRequest?.cancel()
         
-        let url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eec93a2b3390c8735ab2e6671612de59&text=\(searchTerm.replacingOccurrences(of: " ", with: "%20"))&per_page=30&page=\(page)&format=json&nojsoncallback=1"
+        let url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=\(Constants.flickrAPIKey)&text=\(searchTerm.replacingOccurrences(of: " ", with: "%20"))&per_page=30&page=\(page)&format=json&nojsoncallback=1"
         
         executingRequest = Alamofire.request(url).responseJSON { [weak self] response in
             self?.executingRequest = nil

@@ -1,17 +1,16 @@
 import UIKit
 
+enum ImageDownloadState {
+    case downloaded, inProgress, failed
+}
+
 class ImageDownloadManager {
-    
-    enum DownloadState {
-        case downloaded, inProgress, failed
-    }
-    
     static let shared = ImageDownloadManager()
     
     private var downloadsInProgress: [String: URLSessionDataTask] = [:]
     private let imageCache = NSCache<NSString, UIImage>()
     
-    func getImage(for urlString: String, completion: @escaping (UIImage?, DownloadState) -> Void) {
+    func getImage(for urlString: String, completion: @escaping (UIImage?, ImageDownloadState) -> Void) {
         if let imageUrl = URL(string: urlString) {
             if let downloadTaskInProgress = downloadsInProgress[urlString] {
                 downloadTaskInProgress.priority = URLSessionTask.highPriority

@@ -22,7 +22,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSearchController()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "GridIcon"), style: .plain, target: self, action: #selector(displayGridOptions))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: Constants.Images.gridIcon), style: .plain, target: self, action: #selector(displayGridOptions))
         photosCollectionView.dataSource = self
         photosCollectionView.delegate = self
         photosCollectionView.register(UINib(nibName: PhotoThumbCollectionViewCell.nibName, bundle: nil), forCellWithReuseIdentifier: PhotoThumbCollectionViewCell.reuseIdentifier)
@@ -98,9 +98,8 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         } else {
             photoCell.showDownloadIndicator()
             
-            ImageDownloadManager.shared.getImage(for: viewModel.getPhotoUrlString(for: indexPath)) { [weak self] image, state in
+            viewModel.getImage(for: indexPath) {  [weak self] image, state in
                 if image != nil {
-                    self?.viewModel.downloadedPhotos[indexPath] = image!
                     DispatchQueue.main.async {
                         if let cell = self?.photosCollectionView.cellForItem(at: indexPath) as? PhotoThumbCollectionViewCell {
                             cell.setImage(image!)

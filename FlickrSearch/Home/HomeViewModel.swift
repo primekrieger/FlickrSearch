@@ -34,7 +34,7 @@ class HomeViewModel {
         return photosUrlStringsDataSource.count
     }
     
-    func getPhotoUrlString(for indexPath: IndexPath) -> String {
+    private func getPhotoUrlString(for indexPath: IndexPath) -> String {
         return photosUrlStringsDataSource[indexPath.row]
     }
     
@@ -77,6 +77,15 @@ class HomeViewModel {
             } else {
                 self?.delegate?.searchFailed()
             }
+        }
+    }
+    
+    func getImage(for indexPath: IndexPath, completion: @escaping (UIImage?, ImageDownloadState) -> Void) {
+        ImageDownloadManager.shared.getImage(for: getPhotoUrlString(for: indexPath)) { [weak self] image, state in
+            if image != nil {
+                self?.downloadedPhotos[indexPath] = image!
+            }
+            completion(image, state)
         }
     }
     
