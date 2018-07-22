@@ -34,8 +34,9 @@ class ImageDownloadManager {
                 downloadsInProgress[imageUrl.absoluteString] = task
                 task.resume()
             }
+        } else {
+            completion(nil, .failed)
         }
-        completion(nil, .failed)
     }
     
 }
