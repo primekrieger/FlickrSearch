@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 protocol HomeViewModelDelegate: class {
     func dataSourceDidChange()
@@ -17,6 +17,7 @@ class HomeViewModel {
     private var page = 1
     private var maxPages = 1
     var isSearchInProgress = false
+    var downloadedPhotos: [IndexPath: UIImage] = [:]
     private var photosUrlStringsDataSource = [String]() {
         didSet {
             delegate?.dataSourceDidChange()
@@ -32,14 +33,22 @@ class HomeViewModel {
     }
     
     func searchFlickr(for searchTerm: String) {
+        if searchTerm.lowercased() != currentSearchTerm {
+            resetSearch()
+            currentSearchTerm = searchTerm.lowercased()
+            if searchTerm.count > 2 {
+                timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(performPhotoSearch), userInfo: nil, repeats: false)
+            }
+        }
+    }
+    
+    private func resetSearch() {
         timer?.invalidate()
         photosUrlStringsDataSource.removeAll()
+        downloadedPhotos.removeAll()
         ImageDownloadManager.shared.cancelAllDownloadsInProgress()
-        currentSearchTerm = searchTerm.lowercased()
         page = 1
-        if searchTerm.count > 2 {
-            timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(performPhotoSearch), userInfo: nil, repeats: false)
-        }
+        maxPages = 1
     }
     
     func subsequentSearch() {
@@ -63,6 +72,12 @@ class HomeViewModel {
     
     func isLastPage() -> Bool {
         return page >= maxPages
+    }
+    
+    func reduceDownloadPriorityForImage(at indexPath: IndexPath) {
+        if indexPath.row < getNumberOfCells() && downloadedPhotos[indexPath] == nil {
+            ImageDownloadManager.shared.reducePriorityForDownload(with: photosUrlStringsDataSource[indexPath.row])
+        }
     }
     
 }

@@ -45,28 +45,45 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoThumbCollectionViewCell.reuseIdentifier, for: indexPath) as! PhotoThumbCollectionViewCell
-        cell.photoImageView.image = nil
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        
         let photoCell = cell as! PhotoThumbCollectionViewCell
-        
-        ImageDownloadManager.shared.getImage(for: viewModel.getPhotoUrlString(for: indexPath)) { image, state in
-            if image != nil {
-                DispatchQueue.main.async {
-                    photoCell.photoImageView.image = image
+        if let photo = viewModel.downloadedPhotos[indexPath] {
+            photoCell.photoImageView.image = photo
+        } else {
+            photoCell.photoImageView.image = nil
+            
+            ImageDownloadManager.shared.getImage(for: viewModel.getPhotoUrlString(for: indexPath)) { [weak self] image, state in
+                if image != nil {
+                    self?.viewModel.downloadedPhotos[indexPath] = image!
+                    DispatchQueue.main.async {
+                        if let cell = self?.photosCollectionView.cellForItem(at: indexPath) as? PhotoThumbCollectionViewCell {
+                            cell.photoImageView.image = image
+                        }
+                    }
                 }
-                
             }
             
         }
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let bottom = scrollView.contentOffset.y + scrollView.frame.size.height
-        if bottom >= scrollView.contentSize.height {
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        viewModel.reduceDownloadPriorityForImage(at: indexPath)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        checkAndPerformSubsequentSearch()
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        checkAndPerformSubsequentSearch()
+    }
+    
+    func checkAndPerformSubsequentSearch() {
+        let bottom = photosCollectionView.contentOffset.y + photosCollectionView.frame.size.height
+        if bottom >= photosCollectionView.contentSize.height {
             if !viewModel.isSearchInProgress {
                 viewModel.subsequentSearch()
             }
