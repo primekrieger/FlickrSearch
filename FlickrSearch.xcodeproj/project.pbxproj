@@ -17,6 +17,8 @@
 		0EE616E821046B7100EC10DF /* FlickrPhotosSearchResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE616E721046B7100EC10DF /* FlickrPhotosSearchResponseModel.swift */; };
 		0EE616EA21047F2E00EC10DF /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE616E921047F2E00EC10DF /* HomeViewController.swift */; };
 		0EE616EC21047FA800EC10DF /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE616EB21047FA800EC10DF /* HomeViewModel.swift */; };
+		0EE616EF2104981300EC10DF /* PhotoThumbCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE616ED2104981300EC10DF /* PhotoThumbCollectionViewCell.swift */; };
+		0EE616F02104981300EC10DF /* PhotoThumbCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EE616EE2104981300EC10DF /* PhotoThumbCollectionViewCell.xib */; };
 		2575893E735EDFD115A2BCC2 /* Pods_FlickrSearch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283151E031F970E9AC65EEBB /* Pods_FlickrSearch.framework */; };
 		F5BB0682276DA295232D58FF /* Pods_FlickrSearchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A53CAAB52CE0874669FEFA5 /* Pods_FlickrSearchTests.framework */; };
 /* End PBXBuildFile section */
@@ -46,6 +48,8 @@
 		0EE616E721046B7100EC10DF /* FlickrPhotosSearchResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrPhotosSearchResponseModel.swift; sourceTree = "<group>"; };
 		0EE616E921047F2E00EC10DF /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		0EE616EB21047FA800EC10DF /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		0EE616ED2104981300EC10DF /* PhotoThumbCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoThumbCollectionViewCell.swift; sourceTree = "<group>"; };
+		0EE616EE2104981300EC10DF /* PhotoThumbCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoThumbCollectionViewCell.xib; sourceTree = "<group>"; };
 		1717FBDE13CB9A0077711566 /* Pods-FlickrSearchTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickrSearchTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FlickrSearchTests/Pods-FlickrSearchTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1A2B8A9EAA748BCAB558975B /* Pods-FlickrSearch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickrSearch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FlickrSearch/Pods-FlickrSearch.debug.xcconfig"; sourceTree = "<group>"; };
 		283151E031F970E9AC65EEBB /* Pods_FlickrSearch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlickrSearch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,6 +122,8 @@
 				0EE616E721046B7100EC10DF /* FlickrPhotosSearchResponseModel.swift */,
 				0EE616E921047F2E00EC10DF /* HomeViewController.swift */,
 				0EE616EB21047FA800EC10DF /* HomeViewModel.swift */,
+				0EE616ED2104981300EC10DF /* PhotoThumbCollectionViewCell.swift */,
+				0EE616EE2104981300EC10DF /* PhotoThumbCollectionViewCell.xib */,
 			);
 			path = FlickrSearch;
 			sourceTree = "<group>";
@@ -224,6 +230,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EE616F02104981300EC10DF /* PhotoThumbCollectionViewCell.xib in Resources */,
 				0EE616CE21038E6C00EC10DF /* LaunchScreen.storyboard in Resources */,
 				0EE616CB21038E6C00EC10DF /* Assets.xcassets in Resources */,
 				0EE616C921038E6B00EC10DF /* Main.storyboard in Resources */,
@@ -303,6 +310,7 @@
 			files = (
 				0EE616EA21047F2E00EC10DF /* HomeViewController.swift in Sources */,
 				0EE616EC21047FA800EC10DF /* HomeViewModel.swift in Sources */,
+				0EE616EF2104981300EC10DF /* PhotoThumbCollectionViewCell.swift in Sources */,
 				0EE616E62104692300EC10DF /* NetworkManager.swift in Sources */,
 				0EE616E421039D8400EC10DF /* ImageDownloadManager.swift in Sources */,
 				0EE616E821046B7100EC10DF /* FlickrPhotosSearchResponseModel.swift in Sources */,

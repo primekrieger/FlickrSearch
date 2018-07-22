@@ -1,10 +1,24 @@
 import Foundation
 
+protocol HomeViewModelDelegate: class {
+    func dataSourceDidChange()
+}
+
 class HomeViewModel {
+    
+    weak private var delegate: HomeViewModelDelegate?
+    
+    init(delegate: HomeViewModelDelegate) {
+        self.delegate = delegate
+    }
     
     private var timer: Timer?
     private var currentSearchTerm = ""
-    var photosUrlStringsDataSource = [String]()
+    var photosUrlStringsDataSource = [String]() {
+        didSet {
+            delegate?.dataSourceDidChange()
+        }
+    }
     
     func searchFlickr(for searchTerm: String) {
         timer?.invalidate()

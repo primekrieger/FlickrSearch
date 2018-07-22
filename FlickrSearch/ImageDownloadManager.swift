@@ -11,10 +11,8 @@ class ImageDownloadManager {
     lazy var downloadsInProgress: [String: URLSessionDataTask] = [:]
     let imageCache = NSCache<NSString, UIImage>()
     
-    let dummyDataSource = [IndexPath: URL]()
-    
-    func getImage(for indexPath: IndexPath, completion: @escaping (UIImage?, DownloadState) -> Void) {
-        if let imageUrl = dummyDataSource[indexPath] {
+    func getImage(for urlString: String, completion: @escaping (UIImage?, DownloadState) -> Void) {
+        if let imageUrl = URL(string: urlString) {
             if let downloadTaskInProgress = downloadsInProgress[imageUrl.absoluteString] {
                 downloadTaskInProgress.priority = URLSessionTask.highPriority
                 completion(nil, .inProgress)
