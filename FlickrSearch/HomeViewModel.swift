@@ -2,6 +2,8 @@ import UIKit
 
 protocol HomeViewModelDelegate: class {
     func dataSourceDidChange()
+    func searchingStateChanged(searching: Bool)
+    func searchFailed()
 }
 
 class HomeViewModel {
@@ -16,7 +18,11 @@ class HomeViewModel {
     private var currentSearchTerm = ""
     private var page = 1
     private var maxPages = 1
-    var isSearchInProgress = false
+    var isSearchInProgress = false {
+        didSet (value) {
+            delegate?.searchingStateChanged(searching: value)
+        }
+    }
     var downloadedPhotos: [IndexPath: UIImage] = [:]
     private var photosUrlStringsDataSource = [String]() {
         didSet {
@@ -33,16 +39,19 @@ class HomeViewModel {
     }
     
     func searchFlickr(for searchTerm: String) {
-        if searchTerm.lowercased() != currentSearchTerm {
+        let searchText = searchTerm.lowercased().trimmingCharacters(in: CharacterSet.whitespaces)
+        if searchText != currentSearchTerm {
             resetSearch()
-            currentSearchTerm = searchTerm.lowercased()
-            if searchTerm.count > 2 {
+            currentSearchTerm = searchText
+            if currentSearchTerm.count > 2 {
+                isSearchInProgress = true
                 timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(performPhotoSearch), userInfo: nil, repeats: false)
             }
         }
     }
     
     private func resetSearch() {
+        isSearchInProgress = false
         timer?.invalidate()
         photosUrlStringsDataSource.removeAll()
         downloadedPhotos.removeAll()
@@ -59,13 +68,14 @@ class HomeViewModel {
     }
     
     @objc private func performPhotoSearch() {
-        // TODO: Invalidate previous requests
         isSearchInProgress = true
         NetworkManager.shared.searchImages(for: currentSearchTerm, page: page) { [weak self] photosSearchResponseModel in
             self?.isSearchInProgress = false
             if let responseModel = photosSearchResponseModel {
                 self?.maxPages = responseModel.photos.pages
                 self?.photosUrlStringsDataSource.append(contentsOf: responseModel.getUrlStringsForAllPhotosThumbs())
+            } else {
+                self?.delegate?.searchFailed()
             }
         }
     }

@@ -10,6 +10,8 @@ class HomeViewController: UIViewController {
     
     private var collectionViewCellCalculatedWidth = CGFloat()
     
+    private var footerView: LoadingFooterCollectionReusableView?
+    
     private var cellsPerRow: CGFloat = 3 {
         didSet {
             viewDidLayoutSubviews()
@@ -20,7 +22,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSearchController()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "GridIcon"), style: .plain, target: self, action: #selector(displayActionSheet))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "GridIcon"), style: .plain, target: self, action: #selector(displayGridOptions))
         photosCollectionView.dataSource = self
         photosCollectionView.delegate = self
         photosCollectionView.register(UINib(nibName: PhotoThumbCollectionViewCell.nibName, bundle: nil), forCellWithReuseIdentifier: PhotoThumbCollectionViewCell.reuseIdentifier)
@@ -28,11 +30,10 @@ class HomeViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        print(">>>>>>>>>>>>>>")
         collectionViewCellCalculatedWidth = (view.frame.width - (cellsPerRow + 1) * 10) / cellsPerRow
     }
     
-    @objc private func displayActionSheet() {
+    @objc private func displayGridOptions() {
         let alert = UIAlertController(title: "Select no. of images displayed per row", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "2", style: .default, handler: { _ in
             self.cellsPerRow = 2
@@ -52,20 +53,31 @@ class HomeViewController: UIViewController {
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.placeholder = "Enter image name to search"
+        searchController.searchBar.placeholder = "Search (min. 3 characters)"
         navigationItem.titleView = searchController.searchBar
     }
 }
 
 extension HomeViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        viewModel.searchFlickr(for: searchController.searchBar.text ?? "")
+        let searchString = searchController.searchBar.text ?? ""
+        viewModel.searchFlickr(for: searchString)
     }
 }
 
 extension HomeViewController: HomeViewModelDelegate {
     func dataSourceDidChange() {
         photosCollectionView.reloadData()
+    }
+    
+    func searchingStateChanged(searching: Bool) {
+        if searching {
+            footerView?.showLoadingIndicator()
+        }
+    }
+    
+    func searchFailed() {
+        footerView?.showInfoLabel(with: "Search failed")
     }
 }
 
@@ -82,16 +94,22 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let photoCell = cell as! PhotoThumbCollectionViewCell
         if let photo = viewModel.downloadedPhotos[indexPath] {
-            photoCell.photoImageView.image = photo
+            photoCell.setImage(photo)
         } else {
-            photoCell.photoImageView.image = nil
+            photoCell.showDownloadIndicator()
             
             ImageDownloadManager.shared.getImage(for: viewModel.getPhotoUrlString(for: indexPath)) { [weak self] image, state in
                 if image != nil {
                     self?.viewModel.downloadedPhotos[indexPath] = image!
                     DispatchQueue.main.async {
                         if let cell = self?.photosCollectionView.cellForItem(at: indexPath) as? PhotoThumbCollectionViewCell {
-                            cell.photoImageView.image = image
+                            cell.setImage(image!)
+                        }
+                    }
+                } else if state == .failed {
+                    DispatchQueue.main.async {
+                        if let cell = self?.photosCollectionView.cellForItem(at: indexPath) as? PhotoThumbCollectionViewCell {
+                            cell.setFailed()
                         }
                     }
                 }
@@ -114,7 +132,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     
     func checkAndPerformSubsequentSearch() {
         let bottom = photosCollectionView.contentOffset.y + photosCollectionView.frame.size.height
-        if bottom >= photosCollectionView.contentSize.height {
+        if bottom >= photosCollectionView.contentSize.height - 50 {
             if !viewModel.isSearchInProgress {
                 viewModel.subsequentSearch()
             }
@@ -125,13 +143,19 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         let loadingFooterView = photosCollectionView.dequeueReusableSupplementaryView(ofKind: kind,
                                                                          withReuseIdentifier: LoadingFooterCollectionReusableView.reuseIdentifier,
                                                                          for: indexPath) as! LoadingFooterCollectionReusableView
-        if viewModel.getNumberOfCells() == 0 {
+        
+        if (searchController.searchBar.text ?? "").trimmingCharacters(in: CharacterSet.whitespaces).count < 3 {
+            loadingFooterView.showInfoLabel(with: "Please enter at least 3 characters")
+        } else if viewModel.isSearchInProgress {
+            loadingFooterView.showLoadingIndicator()
+        } else if viewModel.getNumberOfCells() == 0 {
             loadingFooterView.showInfoLabel(with: "No data")
         } else if viewModel.isLastPage() {
             loadingFooterView.showInfoLabel(with: "No more results")
         } else {
             loadingFooterView.showLoadingIndicator()
         }
+        footerView = loadingFooterView
         return loadingFooterView
     }
     

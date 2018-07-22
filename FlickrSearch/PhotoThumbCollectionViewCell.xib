@@ -22,17 +22,33 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SHw-pG-Cbv">
                         <rect key="frame" x="0.0" y="0.0" width="186" height="151"/>
                     </imageView>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="aze-Y8-3XH">
+                        <rect key="frame" x="83" y="66" width="20" height="20"/>
+                    </activityIndicatorView>
+                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Failed!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="21Q-2d-9jE">
+                        <rect key="frame" x="68" y="65" width="50" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
+            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
             <constraints>
+                <constraint firstItem="aze-Y8-3XH" firstAttribute="centerY" secondItem="SHw-pG-Cbv" secondAttribute="centerY" id="1ff-R6-zLy"/>
                 <constraint firstItem="SHw-pG-Cbv" firstAttribute="leading" secondItem="ZTg-uK-7eu" secondAttribute="leading" id="D8D-Wi-0bk"/>
                 <constraint firstItem="ZTg-uK-7eu" firstAttribute="bottom" secondItem="SHw-pG-Cbv" secondAttribute="bottom" id="Djw-zZ-njF"/>
                 <constraint firstItem="SHw-pG-Cbv" firstAttribute="top" secondItem="ZTg-uK-7eu" secondAttribute="top" id="VGv-wK-Ymg"/>
+                <constraint firstItem="21Q-2d-9jE" firstAttribute="centerY" secondItem="SHw-pG-Cbv" secondAttribute="centerY" id="WDK-pV-cuB"/>
+                <constraint firstItem="21Q-2d-9jE" firstAttribute="centerX" secondItem="SHw-pG-Cbv" secondAttribute="centerX" id="cS1-0c-mGy"/>
                 <constraint firstItem="ZTg-uK-7eu" firstAttribute="trailing" secondItem="SHw-pG-Cbv" secondAttribute="trailing" id="rtH-4N-zV1"/>
+                <constraint firstItem="aze-Y8-3XH" firstAttribute="centerX" secondItem="SHw-pG-Cbv" secondAttribute="centerX" id="vPi-xQ-bRJ"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="186" height="151"/>
             <connections>
+                <outlet property="downloadIndicator" destination="aze-Y8-3XH" id="iOS-vh-I00"/>
+                <outlet property="failedLabel" destination="21Q-2d-9jE" id="BXt-Sc-JeW"/>
                 <outlet property="photoImageView" destination="SHw-pG-Cbv" id="kLb-4O-6Za"/>
             </connections>
             <point key="canvasLocation" x="102" y="129.5"/>
