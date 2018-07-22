@@ -7,13 +7,44 @@ class HomeViewController: UIViewController {
     lazy private var viewModel = HomeViewModel(delegate: self)
     
     private let searchController = UISearchController(searchResultsController: nil)
+    
+    private var collectionViewCellCalculatedWidth = CGFloat()
+    
+    private var cellsPerRow: CGFloat = 3 {
+        didSet {
+            viewDidLayoutSubviews()
+            photosCollectionView.reloadData()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSearchController()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "GridIcon"), style: .plain, target: self, action: #selector(displayActionSheet))
         photosCollectionView.dataSource = self
         photosCollectionView.delegate = self
         photosCollectionView.register(UINib(nibName: PhotoThumbCollectionViewCell.nibName, bundle: nil), forCellWithReuseIdentifier: PhotoThumbCollectionViewCell.reuseIdentifier)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        print(">>>>>>>>>>>>>>")
+        collectionViewCellCalculatedWidth = (view.frame.width - (cellsPerRow + 1) * 10) / cellsPerRow
+    }
+    
+    @objc private func displayActionSheet() {
+        let alert = UIAlertController(title: "Select no. of images displayed per row", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "2", style: .default, handler: { _ in
+            self.cellsPerRow = 2
+        }))
+        alert.addAction(UIAlertAction(title: "3", style: .default, handler: { _ in
+             self.cellsPerRow = 3
+        }))
+        alert.addAction(UIAlertAction(title: "4", style: .default, handler: { _ in
+             self.cellsPerRow = 4
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     func setupSearchController() {
@@ -38,7 +69,7 @@ extension HomeViewController: HomeViewModelDelegate {
     }
 }
 
-extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.getNumberOfCells()
     }
@@ -102,6 +133,10 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             loadingFooterView.showLoadingIndicator()
         }
         return loadingFooterView
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionViewCellCalculatedWidth, height: collectionViewCellCalculatedWidth)
     }
     
 }
