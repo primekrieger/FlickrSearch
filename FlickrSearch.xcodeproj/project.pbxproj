@@ -13,6 +13,7 @@
 		0EE616CB21038E6C00EC10DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EE616CA21038E6C00EC10DF /* Assets.xcassets */; };
 		0EE616CE21038E6C00EC10DF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE616CC21038E6C00EC10DF /* LaunchScreen.storyboard */; };
 		0EE616D921038E6C00EC10DF /* FlickrSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE616D821038E6C00EC10DF /* FlickrSearchTests.swift */; };
+		0EE616E421039D8400EC10DF /* ImageDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE616E321039D8400EC10DF /* ImageDownloadManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		0EE616D421038E6C00EC10DF /* FlickrSearchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlickrSearchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE616D821038E6C00EC10DF /* FlickrSearchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrSearchTests.swift; sourceTree = "<group>"; };
 		0EE616DA21038E6C00EC10DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0EE616E321039D8400EC10DF /* ImageDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloadManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				0EE616CA21038E6C00EC10DF /* Assets.xcassets */,
 				0EE616CC21038E6C00EC10DF /* LaunchScreen.storyboard */,
 				0EE616CF21038E6C00EC10DF /* Info.plist */,
+				0EE616E321039D8400EC10DF /* ImageDownloadManager.swift */,
 			);
 			path = FlickrSearch;
 			sourceTree = "<group>";
@@ -197,6 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EE616E421039D8400EC10DF /* ImageDownloadManager.swift in Sources */,
 				0EE616C621038E6B00EC10DF /* ViewController.swift in Sources */,
 				0EE616C421038E6B00EC10DF /* AppDelegate.swift in Sources */,
 			);
