@@ -2,6 +2,7 @@ struct FlickrPhotosSearchResponseModel: Codable {
     let photos: Photos
     
     struct Photos: Codable {
+        let pages: Int
         let photo: [PhotoInfo]
         
         struct PhotoInfo: Codable {

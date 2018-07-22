@@ -37,4 +37,11 @@ class ImageDownloadManager {
         }
     }
     
+    func cancelAllDownloadsInProgress() {
+        for (key, task) in downloadsInProgress {
+            task.cancel()
+            downloadsInProgress.removeValue(forKey: key)
+        }
+    }
+    
 }
