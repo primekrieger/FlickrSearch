@@ -1,5 +1,4 @@
 struct FlickrPhotosSearchResponseModel: Codable {
-    
     let photos: Photos
     
     struct Photos: Codable {
@@ -13,6 +12,14 @@ struct FlickrPhotosSearchResponseModel: Codable {
         }
     }
     
+    func getUrlStringsForAllPhotosThumbs() -> [String] {
+        var result = [String]()
+        for photo in photos.photo {
+            let urlString = "https://farm\(photo.farm).staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret)_t.jpg"
+            result.append(urlString)
+        }
+        return result
+    }
     
     
 }
