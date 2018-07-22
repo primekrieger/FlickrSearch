@@ -40,7 +40,7 @@ extension HomeViewController: HomeViewModelDelegate {
 
 extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.photosUrlStringsDataSource.count
+        return viewModel.getNumberOfCells()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -53,7 +53,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         
         let photoCell = cell as! PhotoThumbCollectionViewCell
         
-        ImageDownloadManager.shared.getImage(for: viewModel.photosUrlStringsDataSource[indexPath.row]) { image, state in
+        ImageDownloadManager.shared.getImage(for: viewModel.getPhotoUrlString(for: indexPath)) { image, state in
             if image != nil {
                 DispatchQueue.main.async {
                     photoCell.photoImageView.image = image
@@ -64,5 +64,27 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         }
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let bottom = scrollView.contentOffset.y + scrollView.frame.size.height
+        if bottom >= scrollView.contentSize.height {
+            if !viewModel.isSearchInProgress {
+                viewModel.subsequentSearch()
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let loadingFooterView = photosCollectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                         withReuseIdentifier: LoadingFooterCollectionReusableView.reuseIdentifier,
+                                                                         for: indexPath) as! LoadingFooterCollectionReusableView
+        if viewModel.getNumberOfCells() == 0 {
+            loadingFooterView.showInfoLabel(with: "No data")
+        } else if viewModel.isLastPage() {
+            loadingFooterView.showInfoLabel(with: "No more results")
+        } else {
+            loadingFooterView.showLoadingIndicator()
+        }
+        return loadingFooterView
+    }
     
 }

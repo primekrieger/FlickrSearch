@@ -16,10 +16,19 @@ class HomeViewModel {
     private var currentSearchTerm = ""
     private var page = 1
     private var maxPages = 1
-    var photosUrlStringsDataSource = [String]() {
+    var isSearchInProgress = false
+    private var photosUrlStringsDataSource = [String]() {
         didSet {
             delegate?.dataSourceDidChange()
         }
+    }
+    
+    func getNumberOfCells() -> Int {
+        return photosUrlStringsDataSource.count
+    }
+    
+    func getPhotoUrlString(for indexPath: IndexPath) -> String {
+        return photosUrlStringsDataSource[indexPath.row]
     }
     
     func searchFlickr(for searchTerm: String) {
@@ -42,12 +51,18 @@ class HomeViewModel {
     
     @objc private func performPhotoSearch() {
         // TODO: Invalidate previous requests
+        isSearchInProgress = true
         NetworkManager.shared.searchImages(for: currentSearchTerm, page: page) { [weak self] photosSearchResponseModel in
+            self?.isSearchInProgress = false
             if let responseModel = photosSearchResponseModel {
                 self?.maxPages = responseModel.photos.pages
                 self?.photosUrlStringsDataSource.append(contentsOf: responseModel.getUrlStringsForAllPhotosThumbs())
             }
         }
+    }
+    
+    func isLastPage() -> Bool {
+        return page >= maxPages
     }
     
 }
