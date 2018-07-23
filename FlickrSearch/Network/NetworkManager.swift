@@ -18,4 +18,8 @@ class NetworkManager {
             }
         }
     }
+    
+    func cancelSearchRequest() {
+        executingRequest?.cancel()
+    }
 }

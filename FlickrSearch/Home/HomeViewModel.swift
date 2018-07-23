@@ -53,9 +53,10 @@ class HomeViewModel {
     private func resetSearch() {
         isSearchInProgress = false
         timer?.invalidate()
+        NetworkManager.shared.cancelSearchRequest()
+        ImageDownloadManager.shared.cancelAllDownloadsInProgress()
         photosUrlStringsDataSource.removeAll()
         downloadedPhotos.removeAll()
-        ImageDownloadManager.shared.cancelAllDownloadsInProgress()
         page = 1
         maxPages = 1
     }
