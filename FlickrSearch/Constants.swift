@@ -1,5 +1,5 @@
 struct Constants {
-    static let flickrAPIKey = "eec93a2b3390c8735ab2e6671612de59"
+    static let flickrAPIKey = "f1791de0afd29191d8e1fa9a2c642d22"
     
     struct Images {
         static let gridIcon = "GridIcon"
